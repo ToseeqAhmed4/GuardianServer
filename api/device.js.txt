@@ -1,0 +1,44 @@
+const express = require('express');
+const fetch = require('node-fetch');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
+
+// Environment variables
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const DEVICE_TOKEN = process.env.DEVICE_TOKEN;
+
+// Example routes
+app.post('/health-data', (req, res) => {
+  const token = req.headers['x-api-key'];
+  if (token !== DEVICE_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  console.log("[Health Data] Received:", req.body);
+  res.status(201).json({ message: "Health data saved" });
+});
+
+app.post('/location', (req, res) => {
+  const token = req.headers['x-api-key'];
+  if (token !== DEVICE_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  console.log("[Location] Received:", req.body);
+  res.status(201).json({ message: "Location data saved" });
+});
+
+app.post('/fall-detected', (req, res) => {
+  const token = req.headers['x-api-key'];
+  if (token !== DEVICE_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  console.log("[Fall Alert] Received:", req.body);
+  res.status(201).json({ message: "Fall alert received" });
+});
+
+// Export for Vercel Serverless
+module.exports = app;
